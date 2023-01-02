@@ -40,14 +40,19 @@ func Login(w http.ResponseWriter, r *http.Request) {
 			Username: r.Form.Get("username"),
 			Password: r.Form.Get("password"),
 		}
-		DB := config.DBConn()
-		var temp_user entities.Users
-		result := DB.First(&temp_user, "username LIKE ? AND password LIKE ?", Userinput.Username, Userinput.Password)
-		if result.Error != nil {
-			http.Redirect(w, r, "/login", http.StatusFound)
 
+		if Userinput.Username == "Admin" && Userinput.Password == "12345" {
+			http.Redirect(w, r, "/admin", http.StatusFound)
 		} else {
-			http.Redirect(w, r, "/", http.StatusFound)
+			DB := config.DBConn()
+			var temp_user entities.Users
+			result := DB.First(&temp_user, "username LIKE ? AND password LIKE ?", Userinput.Username, Userinput.Password)
+			if result.Error != nil {
+				http.Redirect(w, r, "/login", http.StatusFound)
+
+			} else {
+				http.Redirect(w, r, "/", http.StatusFound)
+			}
 		}
 
 	}
@@ -69,11 +74,10 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		}
 		DB := config.DBConn()
 		var temp_user entities.Users
-		result := DB.First(&temp_user, "username LIKE ?", Registerinput.Username)
+		result := DB.First(&temp_user, "username LIKE ? ", Registerinput.Username)
 		if result.Error != nil {
 			DB.Create(&entities.Users{First_Name: Registerinput.fname, Last_name: Registerinput.lname, Username: Registerinput.Username, Password: Registerinput.Password})
 			http.Redirect(w, r, "/login", http.StatusFound)
-
 		} else {
 			http.Redirect(w, r, "/register", http.StatusFound)
 		}
@@ -83,10 +87,21 @@ func Register(w http.ResponseWriter, r *http.Request) {
 }
 
 func Admin(w http.ResponseWriter, r *http.Request) {
+	var temp_user []entities.Users
+	DB := config.DBConn()
 	if r.Method == http.MethodGet {
+		result := DB.Find(&temp_user)
+		if result.Error != nil {
+			http.Redirect(w, r, "/login", http.StatusFound)
+		}
 		temp, err := template.ParseFiles("views/admin.html")
 		CheckError(err)
-		temp.Execute(w, nil)
+		temp.Execute(w, temp_user)
+	} else if r.Method == http.MethodPost {
+		r.ParseForm()
+		uid := r.PostForm["id"][0]
+		DB.Delete(&entities.Users{}, uid)
+		http.Redirect(w, r, "/admin", http.StatusFound)
 	}
 
 }
