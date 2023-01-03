@@ -84,7 +84,7 @@
                             <a class="dropdown-item" href="#">Settings</a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="#">Logout</a>
+                            <a class="dropdown-item" href="/logout">Logout</a>
                         </li>
                     </ul>
                 </div>
@@ -101,7 +101,7 @@
                         <input type="search" id="form1" class="form-control" />
                         <label class="form-label" for="form1">Search by Username</label>
                 </div>
-                <button type="button" class="btn btn-primary">
+                <button type="button" class="btn btn-dark">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
@@ -127,7 +127,7 @@
                             <form action="/admin" method="post">
                                 <input type="text" value="{{.ID}}" name="id" style="display: none;" />
                                 <!-- <button type="submit" value="Delete">Delete</button> -->
-                                <button type="submit" value="Delete" class="btn btn-outline-danger">Danger</button>
+                                <button type="submit" value="Delete" class="btn btn-outline-danger">Delete</button>
                             </form>
                         </td>
                     </tr>

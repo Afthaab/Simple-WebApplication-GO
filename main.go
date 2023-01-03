@@ -13,7 +13,11 @@ func main() {
 	http.HandleFunc("/register", controllers.Register)
 	http.HandleFunc("/login", controllers.Login)
 	http.HandleFunc("/admin", controllers.Admin)
+	http.HandleFunc("/test", controllers.Test)
+	http.HandleFunc("/logout", controllers.Logout)
+
 	fmt.Println("Server starting at 4000")
+
 	http.ListenAndServe(":4000", nil)
 
 }
